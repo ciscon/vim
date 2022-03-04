@@ -199,6 +199,20 @@ autocmd FileType c,cpp set makeprg=gcc\ -Wall\ -Wstrict-prototypes\ -Wmissing-pr
 autocmd FileType c,sh setlocal noexpandtab softtabstop=0 shiftwidth=4
 set tabstop=4
 
+
+"autoresize windows
+augroup ReduceNoise
+    autocmd!
+    " Automatically resize active split to 85 width
+    autocmd WinEnter * :call ResizeSplits()
+augroup END
+
+function! ResizeSplits()
+    set winwidth=85
+    wincmd =
+endfunction
+
+
 ""vdebug
 if !exists('g:vdebug_options')
   let g:vdebug_options = {}
