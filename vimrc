@@ -218,15 +218,22 @@ if !exists('g:vdebug_options')
   let g:vdebug_options = {}
 endif
 let g:vdebug_options.port = 9000
+
 "get the proper source directory on this machine
 if (isdirectory('/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'))
   let ss_source='/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'
 elseif (isdirectory('/var/tmp/git/sitscape/apache2.2/htdocs/ss'))
   let ss_source='/var/tmp/git/sitscape/apache2.2/htdocs/ss'
+elseif (isdirectory('/SitscapeData/SOURCE/ss'))
+  let ss_source='/SitscapeData/SOURCE/ss'
 else
   let ss_source='/var/www/ss'
 endif
-  let g:vdebug_options.path_maps = {'/var/www/ss':ss_source,}
+
+"target directory
+let g:vdebug_options.path_maps = {'/var/www/ss':ss_source,}
+
+"default keymap for reference (or customization)
 let g:vdebug_keymap = {
     \    "run" : "<F5>",
     \    "run_to_cursor" : "<F9>",
