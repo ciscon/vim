@@ -7,27 +7,17 @@ set mouse=
 "set t_Co=256
 "" set Vim-specific sequences for RGB colors
 "colorscheme bubblegum-256-dark
-color jellybeans
 "color zenburn
+color jellybeans
 set background=dark
-
-"if (has("termguicolors"))
-"  set termguicolors
-"  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-"endif
 
 "add cursorline
 set cursorline
-"highlight CursorLine ctermbg=234 ctermfg=none cterm=none
 
 "leave background alone if running in terminal
 if !has("gui_running")
   autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
 endif
-
-"autocmd ColorScheme * highlight Visual ctermfg=None ctermbg=237 cterm=None
-"autocmd ColorScheme * highlight StatusLine ctermbg=239 ctermfg=white
 
 
 filetype plugin indent on
@@ -214,11 +204,11 @@ endfunction
 
 
 ""vdebug
-if !exists('g:vdebug_options')
-  let g:vdebug_options = {}
-endif
+"toggle bp window
+:map <Leader>b :BreakpointWindow <CR>
+let g:vdebug_options = {}
 let g:vdebug_options.port = 9000
-
+let g:vdebug_options.watch_window_style = 'compact'
 "get the proper source directory on this machine
 if (isdirectory('/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'))
   let ss_source='/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'
@@ -247,3 +237,6 @@ let g:vdebug_keymap = {
     \    "eval_under_cursor" : "<F12>",
     \    "eval_visual" : "<Leader>e",
     \}
+"breakpoint colors
+hi default DbgBreakptLine term=reverse ctermfg=White ctermbg=DarkGrey guifg=#ffffff guibg=#0000ff
+hi default DbgBreakptSign term=reverse ctermfg=White ctermbg=DarkBlue guifg=#ffffff guibg=#0000ff
