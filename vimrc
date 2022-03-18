@@ -138,37 +138,46 @@ augroup Binary
 augroup END
 
 
-""""""""""""""""""""""""""""""
-" => Status line
-""""""""""""""""""""""""""""""
-" Always show the status line
-set laststatus=2
-
-" Format the status line
-"set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
-
-"set  rtp+=/usr/local/lib/python2.7/dist-packages/powerline/bindings/vim/
-""""source /usr/share/vim/addons/plugin/powerline.vim
-
-
-function! Preserve(command)
-    " Preparation: save window state
-    let l:saved_winview = winsaveview()
-    " Run the command:
-    execute a:command
-    " Clean up: restore previous window position
-    call winrestview(l:saved_winview)
-endfunction
-
 "remove trailing whitespace and reformat without losing postition
+"function! Preserve(command)
+"    " Preparation: save window state
+"    let l:saved_winview = winsaveview()
+"    " Run the command:
+"    execute a:command
+"    " Clean up: restore previous window position
+"    call winrestview(l:saved_winview)
+"endfunction
 "nnoremap <F5> :call Preserve("normal gg=G") <BAR>:call Preserve("%s/\\s\\+$//e")<CR>
 
 set noshowmode
 
-let g:airline_powerline_fonts = 1
-"let g:airline_theme='base16_ashes'
-set runtimepath^=~/.vim/bundle/vim-airline
-"set runtimepath^=~/.vim/bundle/vim-airline-themes
+
+function! GitBranch()
+  return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+endfunction
+
+function! StatuslineGit()
+  let l:branchname = GitBranch()
+  return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+endfunction
+
+set statusline=
+set statusline+=%#PmenuSel#
+set statusline+=%{StatuslineGit()}
+set statusline+=%#LineNr#
+set statusline+=\ %F
+set statusline+=%=
+set statusline+=%#CursorColumn#
+set statusline+=\ %y
+set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
+set statusline+=\[%{&fileformat}\]
+set statusline+=\ %p%%
+set statusline+=\ %l:%c
+set statusline+=\ 
+
+set laststatus=2
+"set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+
 
 
 "slow inserts
