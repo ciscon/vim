@@ -203,8 +203,16 @@ augroup ReduceNoise
 augroup END
 
 function! ResizeSplits()
-    set winwidth=85
-    wincmd =
+    if &ft == 'nerdtree'
+        return
+    elseif &ft == 'qf'
+        " Always set quickfix list to a height of 10
+        resize 10
+        return
+    else
+        set winwidth=100
+        wincmd =
+    endif
 endfunction
 
 
@@ -214,6 +222,14 @@ endfunction
 let g:vdebug_options = {}
 let g:vdebug_options.port = 9000
 let g:vdebug_options.watch_window_style = 'compact'
+let g:vdebug_options.simplified_status = 1
+let g:vdebug_options.continuous_mode = 1
+let g:vdebug_options.break_on_open = 0
+let g:vdebug_options.debug_window_level = 0
+let g:vdebug_options.layout = 'vertical'
+"let g:vdebug_options.debug_file_level = 2
+"let g:vdebug_options.debug_file = '/tmp/vdebug.log'
+
 "get the proper source directory on this machine
 if (isdirectory('/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'))
   let ss_source='/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'
