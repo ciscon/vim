@@ -155,6 +155,7 @@ set noshowmode
 "
 let g:airline_disabled = 1
 
+set statusline+=%{mode()}
 set statusline+=%#PmenuSel#
 set statusline+=%#LineNr#
 set statusline+=\ %F
@@ -188,6 +189,10 @@ autocmd FileType php set makeprg=php\ -l\ %
 autocmd FileType c,cpp set makeprg=gcc\ -Wall\ -Wstrict-prototypes\ -Wmissing-prototypes\ -Wshadow\ -Wconversion\ %
 autocmd FileType c,sh setlocal noexpandtab softtabstop=0 shiftwidth=4
 set tabstop=4
+
+
+"remap autocomplete
+inoremap <Nul> <C-x><C-o>
 
 
 "autoresize windows
