@@ -2,9 +2,9 @@
 set mouse=a
 set ttymouse=xterm
 
-"colorscheme bubblegum-256-dark
 "color zenburn
-color jellybeans
+"color jellybeans
+colorscheme bubblegum-256-dark
 set background=dark
 
 "add cursorline
@@ -12,9 +12,11 @@ set cursorline
 
 "leave background alone if running in terminal
 if !has("gui_running")
-  autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+  "no background?
+  "autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+  "do not change colors of fg on cursorline
+  autocmd ColorScheme * highlight CursorLine ctermfg=NONE
 endif
-
 
 filetype plugin indent on
 syntax enable
@@ -32,21 +34,13 @@ set autochdir
 "write changes to vimrc?
 set modifiable
 
-"gvim
-"if has('gui_running')
-"set guifont=Terminus\ 10
-"colorscheme evening
-"colorscheme delek
-"colors evening
-"endif
-
 "key mappings
-
-
 ""tabs
 :map <C-j> :tabp <CR>
 :map <C-k> :tabn <CR>
 :map <C-n> :tabe <CR>:E <CR>
+"remap autocomplete
+inoremap <Nul> <C-x><C-o>
 
 
 " file is large from 10mb
@@ -187,8 +181,6 @@ autocmd FileType c,sh setlocal noexpandtab softtabstop=0 shiftwidth=4
 set tabstop=4
 
 
-"remap autocomplete
-inoremap <Nul> <C-x><C-o>
 
 
 "vimspector
