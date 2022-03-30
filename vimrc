@@ -280,5 +280,7 @@ packadd! vimspector
 :map <F10> <Plug>VimspectorToggleBreakpoint
 :map <F11> <Plug>VimspectorUpFrame
 :map <F12> <Plug>VimspectorDownFrame
+:map <Leader>b <Plug>VimspectorBreakpoints
+
 
 
