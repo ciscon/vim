@@ -259,5 +259,7 @@ let g:vdebug_keymap = {
     \    "eval_visual" : "<Leader>e",
     \}
 "breakpoint colors
-hi default DbgBreakptLine term=reverse ctermfg=White ctermbg=DarkGrey guifg=#ffffff guibg=#0000ff
+hi default DbgBreakptLine term=reverse ctermfg=none ctermbg=DarkGrey guifg=#ffffff guibg=#0000ff
+hi default DbgCurrentLine term=reverse ctermfg=none ctermbg=Red guifg=#ffffff guibg=#ff0000
+hi default DbgDisabledLine term=reverse ctermbg=none ctermfg=Cyan guibg=#b4ee9a guifg=#888888
 hi default DbgBreakptSign term=reverse ctermfg=White ctermbg=DarkBlue guifg=#ffffff guibg=#0000ff
