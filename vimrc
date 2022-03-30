@@ -1,13 +1,7 @@
 "source $VIMRUNTIME/defaults.vim
-"set mouse=
-"set mouse-=a
 set mouse=a
 set ttymouse=xterm
 
-"filetype off
-"force 256 colors
-"set t_Co=256
-"" set Vim-specific sequences for RGB colors
 "colorscheme bubblegum-256-dark
 "color zenburn
 color jellybeans
@@ -197,25 +191,60 @@ set tabstop=4
 inoremap <Nul> <C-x><C-o>
 
 
-"autoresize windows
-augroup ReduceNoise
-    autocmd!
-    " Automatically resize active split to 85 width
-    autocmd WinEnter * :call ResizeSplits()
-augroup END
+"vimspector
+packadd! vimspector
+"let g:vimspector_enable_mappings = 'HUMAN'
+let g:vimspector_ui_mode = 'horizontal'
+:map <F2> <Plug>VimspectorStepOver
+:map <F3> <Plug>VimspectorStepInto
+:map <F4> <Plug>VimspectorStepOut
+:map <F5> <Plug>VimspectorContinue
+:map <F6> <Plug>VimspectorBalloonEval
+:map <F8> <Plug>VimspectorAddFunctionBreakpoint
+:map <F9> <Plug>VimspectorRunToCursor
+:map <F10> <Plug>VimspectorToggleBreakpoint
+:map <F11> <Plug>VimspectorUpFrame
+:map <F12> <Plug>VimspectorDownFrame
+:map <Leader>b <Plug>VimspectorBreakpoints
 
-function! ResizeSplits()
-    if &ft == 'nerdtree'
-        return
-    elseif &ft == 'qf'
-        " Always set quickfix list to a height of 10
-        resize 10
-        return
-    else
-        set winwidth=100
-        wincmd =
-    endif
-endfunction
+
+
+"""unused below
+
+
+
+"simple resize
+"set winwidth=100
+"autocmd VimEnter * :call SetWins()
+"function SetWins()
+"  let min=(&columns / 2) - 1
+"  if min < &columns
+"    let &winwidth=min
+"  else
+"    let min=(&min / 2) - 1
+"    let &winwidth=min
+"  end
+"endfunction
+
+""autoresize windows
+"augroup ReduceNoise
+"    autocmd!
+"    " Automatically resize active split to 85 width
+"    autocmd WinEnter * :call ResizeSplits()
+"augroup END
+"
+"function! ResizeSplits()
+"    if &ft == 'nerdtree'
+"        return
+"    elseif &ft == 'qf'
+"        " Always set quickfix list to a height of 10
+"        resize 10
+"        return
+"    else
+"        set winwidth=50%
+"        wincmd =
+"    endif
+"endfunction
 
 
 """vdebug
@@ -265,22 +294,5 @@ endfunction
 "hi default DbgCurrentLine term=reverse ctermfg=none ctermbg=Red guifg=#ffffff guibg=#ff0000
 "hi default DbgDisabledLine term=reverse ctermbg=none ctermfg=Cyan guibg=#b4ee9a guifg=#888888
 "hi default DbgBreakptSign term=reverse ctermfg=White ctermbg=DarkBlue guifg=#ffffff guibg=#0000ff
-
-
-"vimspector
-packadd! vimspector
-"let g:vimspector_enable_mappings = 'HUMAN'
-:map <F2> <Plug>VimspectorStepOver
-:map <F3> <Plug>VimspectorStepInto
-:map <F4> <Plug>VimspectorStepOut
-:map <F5> <Plug>VimspectorContinue
-:map <F6> <Plug>VimspectorBalloonEval
-:map <F8> <Plug>VimspectorAddFunctionBreakpoint
-:map <F9> <Plug>VimspectorRunToCursor
-:map <F10> <Plug>VimspectorToggleBreakpoint
-:map <F11> <Plug>VimspectorUpFrame
-:map <F12> <Plug>VimspectorDownFrame
-:map <Leader>b <Plug>VimspectorBreakpoints
-
 
 
