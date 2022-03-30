@@ -1,6 +1,8 @@
-source $VIMRUNTIME/defaults.vim
-set mouse=
+"source $VIMRUNTIME/defaults.vim
+"set mouse=
 "set mouse-=a
+set mouse=a
+set ttymouse=xterm
 
 "filetype off
 "force 256 colors
@@ -216,50 +218,67 @@ function! ResizeSplits()
 endfunction
 
 
-""vdebug
-"toggle bp window
-:map <Leader>b :BreakpointWindow <CR>
-let g:vdebug_options = {}
-let g:vdebug_options.port = 9000
-let g:vdebug_options.watch_window_style = 'compact'
-let g:vdebug_options.simplified_status = 1
-let g:vdebug_options.continuous_mode = 1
-let g:vdebug_options.break_on_open = 0
-let g:vdebug_options.debug_window_level = 0
-let g:vdebug_options.layout = 'vertical'
-"let g:vdebug_options.debug_file_level = 2
-"let g:vdebug_options.debug_file = '/tmp/vdebug.log'
+"""vdebug
+""toggle bp window
+":map <Leader>b :BreakpointWindow <CR>
+"let g:vdebug_options = {}
+"let g:vdebug_options.port = 9000
+"let g:vdebug_options.watch_window_style = 'compact'
+"let g:vdebug_options.simplified_status = 1
+"let g:vdebug_options.continuous_mode = 1
+"let g:vdebug_options.break_on_open = 0
+"let g:vdebug_options.debug_window_level = 0
+"let g:vdebug_options.layout = 'vertical'
+""let g:vdebug_options.debug_file_level = 2
+""let g:vdebug_options.debug_file = '/tmp/vdebug.log'
+"
+""get the proper source directory on this machine
+"if (isdirectory('/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'))
+"  let ss_source='/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'
+"elseif (isdirectory('/var/tmp/git/sitscape/apache2.2/htdocs/ss'))
+"  let ss_source='/var/tmp/git/sitscape/apache2.2/htdocs/ss'
+"elseif (isdirectory('/SitscapeData/SOURCE/ss'))
+"  let ss_source='/SitscapeData/SOURCE/ss'
+"else
+"  let ss_source='/var/www/ss'
+"endif
+"
+""target directory
+"let g:vdebug_options.path_maps = {'/var/www/ss':ss_source,}
+"
+""default keymap for reference (or customization)
+"let g:vdebug_keymap = {
+"    \    "run" : "<F5>",
+"    \    "run_to_cursor" : "<F9>",
+"    \    "step_over" : "<F2>",
+"    \    "step_into" : "<F3>",
+"    \    "step_out" : "<F4>",
+"    \    "close" : "<F6>",
+"    \    "detach" : "<F7>",
+"    \    "set_breakpoint" : "<F10>",
+"    \    "get_context" : "<F11>",
+"    \    "eval_under_cursor" : "<F12>",
+"    \    "eval_visual" : "<Leader>e",
+"    \}
+""breakpoint colors
+"hi default DbgBreakptLine term=reverse ctermfg=none ctermbg=DarkGrey guifg=#ffffff guibg=#0000ff
+"hi default DbgCurrentLine term=reverse ctermfg=none ctermbg=Red guifg=#ffffff guibg=#ff0000
+"hi default DbgDisabledLine term=reverse ctermbg=none ctermfg=Cyan guibg=#b4ee9a guifg=#888888
+"hi default DbgBreakptSign term=reverse ctermfg=White ctermbg=DarkBlue guifg=#ffffff guibg=#0000ff
 
-"get the proper source directory on this machine
-if (isdirectory('/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'))
-  let ss_source='/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'
-elseif (isdirectory('/var/tmp/git/sitscape/apache2.2/htdocs/ss'))
-  let ss_source='/var/tmp/git/sitscape/apache2.2/htdocs/ss'
-elseif (isdirectory('/SitscapeData/SOURCE/ss'))
-  let ss_source='/SitscapeData/SOURCE/ss'
-else
-  let ss_source='/var/www/ss'
-endif
 
-"target directory
-let g:vdebug_options.path_maps = {'/var/www/ss':ss_source,}
+"vimspector
+packadd! vimspector
+"let g:vimspector_enable_mappings = 'HUMAN'
+:map <F2> <Plug>VimspectorStepOver
+:map <F3> <Plug>VimspectorStepInto
+:map <F4> <Plug>VimspectorStepOut
+:map <F5> <Plug>VimspectorContinue
+:map <F6> <Plug>VimspectorBalloonEval
+:map <F8> <Plug>VimspectorAddFunctionBreakpoint
+:map <F9> <Plug>VimspectorRunToCursor
+:map <F10> <Plug>VimspectorToggleBreakpoint
+:map <F11> <Plug>VimspectorUpFrame
+:map <F12> <Plug>VimspectorDownFrame
 
-"default keymap for reference (or customization)
-let g:vdebug_keymap = {
-    \    "run" : "<F5>",
-    \    "run_to_cursor" : "<F9>",
-    \    "step_over" : "<F2>",
-    \    "step_into" : "<F3>",
-    \    "step_out" : "<F4>",
-    \    "close" : "<F6>",
-    \    "detach" : "<F7>",
-    \    "set_breakpoint" : "<F10>",
-    \    "get_context" : "<F11>",
-    \    "eval_under_cursor" : "<F12>",
-    \    "eval_visual" : "<Leader>e",
-    \}
-"breakpoint colors
-hi default DbgBreakptLine term=reverse ctermfg=none ctermbg=DarkGrey guifg=#ffffff guibg=#0000ff
-hi default DbgCurrentLine term=reverse ctermfg=none ctermbg=Red guifg=#ffffff guibg=#ff0000
-hi default DbgDisabledLine term=reverse ctermbg=none ctermfg=Cyan guibg=#b4ee9a guifg=#888888
-hi default DbgBreakptSign term=reverse ctermfg=White ctermbg=DarkBlue guifg=#ffffff guibg=#0000ff
+
