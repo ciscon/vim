@@ -2,9 +2,7 @@
 set mouse=a
 set ttymouse=xterm
 
-"color zenburn
-"color jellybeans
-colorscheme bubblegum-256-dark
+color xoria256
 set background=dark
 
 "add cursorline
