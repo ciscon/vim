@@ -23,7 +23,7 @@
           "Notice": "N",
           "Warning": "N",
           "Error": "Y",
-          "Exception": "Y",
+          "Exception": "N",
           "*": "N"
         }
       }
