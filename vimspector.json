@@ -1,1 +1,32 @@
-pack/vimspector/opt/vimspector/configurations/linux/_all/vimspector.json
+{
+  "configurations": {
+    "Listen for XDebug": {
+      "default": true,
+      "adapter": "vscode-php-debug",
+      "variables": {
+        "GitPath": { 
+          "shell" : [ "readlink", "-f", "${HOME}/ss" ]
+        }
+      },
+      "configuration": {
+        "name": "Listen for XDebug",
+        "type": "php",
+        "request": "launch",
+        "port": 9000,
+        "stopOnEntry": false,
+        "pathMappings": {
+          "/var/www/ss": "$GitPath"
+        }
+      },
+      "breakpoints": {
+        "exception": {
+          "Notice": "N",
+          "Warning": "N",
+          "Error": "Y",
+          "Exception": "N",
+          "*": "N"
+        }
+      }
+    }
+  }
+}
