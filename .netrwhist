@@ -1,4 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =2
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/home/ciscon/.config'
+let g:netrw_dirhist_3='/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss'
 let g:netrw_dirhist_2='/home/git/dev_lamp/sitscape/apache2.2/htdocs/ss/sites'
 let g:netrw_dirhist_1='/home/git/dev_build_docker/ss-build/builds/openfire-build'
