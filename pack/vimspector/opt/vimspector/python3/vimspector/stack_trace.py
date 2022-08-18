@@ -419,6 +419,14 @@ class StackTraceView( object ):
       self._JumpToFrame( frame, 'down' )
 
 
+  def JumpToProgramCounter( self ):
+    frame = self._GetFrameOffset( 0 )
+    if not frame:
+      utils.UserMessage( 'No current stack frame' )
+    else:
+      self._JumpToFrame( frame, 'jump' )
+
+
   def AnyThreadsRunning( self ):
     for thread in self._threads:
       if thread.state != Thread.TERMINATED:
@@ -543,7 +551,7 @@ class StackTraceView( object ):
         source = { 'name': '<unknown>' }
 
       if 'name' not in source:
-        source[ 'name' ] = os.path.basename( source.get( 'path', 'unknwon' ) )
+        source[ 'name' ] = os.path.basename( source.get( 'path', 'unknown' ) )
 
       if frame.get( 'presentationHint' ) == 'label':
         # Sigh. FOr some reason, it's OK for debug adapters to completely ignore

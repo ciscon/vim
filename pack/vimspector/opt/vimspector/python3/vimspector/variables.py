@@ -152,33 +152,15 @@ class Variable( Expandable ):
 
 class Watch:
   """Holds a user watch expression (DAP request) and the result (WatchResult)"""
-  def __init__( self, expression: dict, tied_to_frame: bool ):
+  def __init__( self, expression: dict ):
     self.result: WatchResult
     self.line = None
 
     self.expression = expression
-    self.tied_to_frame = tied_to_frame
     self.result = None
 
   def SetCurrentFrame( self, frame ):
-    # OK this is a bit hacky. In Vimspector we have elected to associatet a
-    # frameId with a watch so that expressions that might match different things
-    # in different (current) stack frames always resolve unambiguously to the
-    # frame the user added the watch in. For exam,ple consider a stack like:
-    #
-    # TOP      int i = 0;
-    # MIDDLE   int i = 100;
-    # BOTTOM   int i = -1;
-    #
-    # When adding a watch for 'i' in MIDDLE, we should see '100', even if the
-    # 'current frame' is BOTTOM.
-    #
-    # However, if we _saved_ the watch to the file, we _don't know_ what the
-    # frameid should be!. Se, we just bung the current frame on it and it
-    # shimmers between frames as we step/move.
-
-    if not self.tied_to_frame:
-      self.expression[ 'frameId' ] = frame[ 'id' ]
+    self.expression[ 'frameId' ] = frame[ 'id' ]
 
   @staticmethod
   def New( frame, expression, context ):
@@ -189,7 +171,7 @@ class Watch:
     if frame:
       watch[ 'frameId' ] = frame[ 'id' ]
 
-    return Watch( watch, bool( frame ) )
+    return Watch( watch )
 
 
 class View:
@@ -304,8 +286,6 @@ class VariablesView( object ):
     if has_balloon_term:
       self._oldoptions[ 'balloonevalterm' ] = vim.options[ 'balloonevalterm' ]
       vim.options[ 'balloonevalterm' ] = True
-
-    self._is_term = not bool( int( vim.eval( "has( 'gui_running' )" ) ) )
 
   def Clear( self ):
     with utils.ModifiableScratchBuffer( self._vars.buf ):
@@ -439,7 +419,7 @@ class VariablesView( object ):
       else:
         watch.result.Update( message[ 'body' ] )
 
-      popup_win_id = utils.CreateTooltip( self._is_term, [], is_hover )
+      popup_win_id = utils.CreateTooltip( [], is_hover )
       # record the global eval window id
       vim.vars[ 'vimspector_session_windows' ][ 'eval' ] = int( popup_win_id )
       popup_bufnr = int( vim.eval( "winbufnr({})".format( popup_win_id ) ) )
@@ -470,7 +450,7 @@ class VariablesView( object ):
 
     def failure_handler( reason, message ):
       display = [ reason ]
-      float_win_id = utils.CreateTooltip( self._is_term, display, is_hover )
+      float_win_id = utils.CreateTooltip( display, is_hover )
       # record the global eval window id
       vim.vars[ 'vimspector_session_windows' ][ 'eval' ] = int( float_win_id )
 
@@ -494,7 +474,7 @@ class VariablesView( object ):
 
     hover = variable.HoverText()
     if hover:
-      utils.CreateTooltip( self._is_term, hover.split( '\n' ), is_hover )
+      utils.CreateTooltip( hover.split( '\n' ), is_hover )
 
     return ''
 

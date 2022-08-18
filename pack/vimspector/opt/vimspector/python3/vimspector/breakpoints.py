@@ -18,9 +18,27 @@ from collections import defaultdict
 import vim
 import os
 import logging
+import operator
 
 import json
 from vimspector import utils, signs, settings
+
+
+def _JumpToBreakpoint( bp ):
+  success = int( vim.eval(
+      f'win_gotoid( bufwinid( \'{ bp[ "filename" ] }\' ) )' ) )
+
+  try:
+    if not success:
+      vim.command( "leftabove split {}".format( bp[ 'filename' ] ) )
+
+    utils.SetCursorPosInWindow( vim.current.window, bp[ 'lnum' ], 1 )
+  except vim.error:
+    # 'filename' or 'lnum' might be missing,
+    # so don't trigger an exception here by referring to them
+    utils.UserMessage( "Unable to jump to file",
+                       persist = True,
+                       error = True )
 
 
 class BreakpointsView( object ):
@@ -274,21 +292,28 @@ class ProjectBreakpoints( object ):
     if bp.get( 'type' ) != 'L':
       return
 
-    success = int( vim.eval(
-        f'win_gotoid( bufwinid( \'{ bp[ "filename" ] }\' ) )' ) )
+    _JumpToBreakpoint( bp )
 
-    try:
-      if not success:
-        vim.command( "leftabove split {}".format( bp[ 'filename' ] ) )
+  def JumpToNextBreakpoint( self, reverse=False ):
+    bps = self._breakpoints_view._breakpoint_list
+    if not bps:
+      return
 
-      utils.SetCursorPosInWindow( vim.current.window, bp[ 'lnum' ], 1 )
-    except vim.error:
-      # 'filename' or 'lnum' might be missing,
-      # so don't trigger an exception here by refering to them
-      utils.UserMessage( "Unable to jump to file",
-                         persist = True,
-                         error = True )
+    line = vim.current.window.cursor[ 0 ]
+    comparator = operator.lt if reverse else operator.gt
+    sorted_bps = sorted( bps,
+                         key=operator.itemgetter( 'lnum' ),
+                         reverse=reverse )
+    bp = next( ( bp
+                 for bp in sorted_bps
+                 if comparator( bp[ 'lnum' ], line ) ),
+                None )
 
+    if bp:
+      _JumpToBreakpoint( bp )
+
+  def JumpToPreviousBreakpoint( self ):
+    self.JumpToNextBreakpoint( reverse=True )
 
   def ClearBreakpointViewBreakpoint( self ):
     bp = self._breakpoints_view.GetBreakpointForLine()
@@ -388,8 +413,8 @@ class ProjectBreakpoints( object ):
           # Unplace the sign. If the sign was moved by the server, then we don't
           # want a subsequent call to _SignToLine to override the user's
           # breakpoint location with the server one. This is not what users
-          # typicaly expect, and we may (soon) call something that eagerly calls
-          # _SignToLine, such as _ShowBreakpoints,
+          # typically expect, and we may (soon) call something that eagerly
+          # calls _SignToLine, such as _ShowBreakpoints,
           if 'sign_id' in bp:
             signs.UnplaceSign( bp[ 'sign_id' ], 'VimspectorBP' )
             del bp[ 'sign_id' ]
@@ -492,14 +517,14 @@ class ProjectBreakpoints( object ):
 
     # We only disable when *toggling* in the breakpoints window
     # (should_delete=False), or for legacy reasons, when a switch is set
-    can_disble = not should_delete or settings.Bool(
+    can_disable = not should_delete or settings.Bool(
       'toggle_disables_breakpoint' )
 
     bp, index = self._FindLineBreakpoint( file_name, line )
     if bp is None:
       # ADD
       self._PutLineBreakpoint( file_name, line, options )
-    elif bp[ 'state' ] == 'ENABLED' and can_disble:
+    elif bp[ 'state' ] == 'ENABLED' and can_disable:
       # DISABLE
       bp[ 'state' ] = 'DISABLED'
     elif not should_delete:
@@ -769,9 +794,9 @@ class ProjectBreakpoints( object ):
       'supportsConfigurationDoneRequest' ):
       # Note the supportsConfigurationDoneRequest part: prior to there being a
       # configuration done request, the "exception breakpoints" request was the
-      # indication that configuraiton was done (and its response is used to
+      # indication that configuration was done (and its response is used to
       # trigger requesting threads etc.). See the note in
-      # debug_session.py:_Initialise for more detials
+      # debug_session.py:_Initialise for more details
       exception_filters = []
       configured_filter_options = configured_breakpoints.get( 'exception', {} )
       if exception_breakpoint_filters:

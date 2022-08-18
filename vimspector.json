@@ -1,3 +1,4 @@
+//must have nodejs installed
 {
   "configurations": {
     "Listen for XDebug": {
