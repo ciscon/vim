@@ -183,6 +183,7 @@ set tabstop=4
 
 "vimspector
 packadd! vimspector
+let g:vimspector_base_dir = '/home/ciscon/.vim/pack/vimspector'
 "let g:vimspector_enable_mappings = 'HUMAN'
 let g:vimspector_ui_mode = 'horizontal'
 :map <F2> <Plug>VimspectorStepOver

@@ -1,0 +1,220 @@
+name: Build
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  PythonLint:
+    runs-on: ubuntu-20.04
+    container: 'puremourning/vimspector:test-x86_64'
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'Insatll requirements'
+      run: pip3 install --user -r dev_requirements.txt
+    - name: 'Run flake8'
+      run: '$HOME/.local/bin/flake8 python3/ *.py'
+  VimscriptLint:
+    runs-on: 'ubuntu-20.04'
+    container: 'puremourning/vimspector:test-x86_64'
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'Install requirements'
+      run: pip3 install --user -r dev_requirements.txt
+    - name: 'Run vint'
+      run: $HOME/.local/bin/vint autoload/ compiler/ plugin/ tests/ syntax/
+
+  Linux:
+    runs-on: 'ubuntu-20.04'
+    container:
+      image: 'puremourning/vimspector:test-x86_64'
+      options: --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime:
+          - vim
+          - nvim
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: 'Install requirements'
+      run: pip3 install --user -r dev_requirements.txt
+
+    - run: |
+        go install github.com/go-delve/delve/cmd/dlv@latest
+      name: 'Install Delve for Go'
+
+    - uses: actions/cache@v2
+      with:
+        key: v1-gadgets-${{ runner.os }}-${{ hashFiles( 'python3/vimspector/gadgets.py' ) }}
+        path: gadgets/linux/download
+      name: Cache gadgets
+
+    - run: ${{ matrix.runtime }} --version
+      name: 'Print vim version information'
+
+    - run: |
+        export GOPATH=$HOME/go
+        ./run_tests --exe ${{ matrix.runtime }} --basedir $(pwd) --install --update --report messages --quiet
+      name: 'Run the tests'
+      id: run_tests
+      env:
+        VIMSPECTOR_MIMODE: gdb
+
+    - name: "Upload test logs"
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: 'test-logs-${{ runner.os }}-${{ matrix.runtime }}'
+        path: 'tests/logs/**/*'
+
+    - name: 'Package'
+      if: matrix.runtime == 'vim'
+      run: ./make_package linux ${{ github.run_id }}
+
+    # TODO: test the tarball
+
+    - name: "Upload package"
+      if: matrix.runtime == 'vim'
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'package-linux'
+        path: 'package/linux-${{ github.run_id }}.tar.gz'
+
+    # - name: Start SSH session if failed
+    #   uses: luchihoratiu/debug-via-ssh@main
+    #   if: failure()
+    #   with:
+    #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    #     SSH_PASS: ${{ secrets.SSH_PASS }}
+
+  MacOS:
+    runs-on: 'macos-12'
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime:
+          - vim
+          - nvim
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: 'Install requirements'
+      run: pip3 install --user -r dev_requirements.txt
+
+    - run: |
+        brew update-reset
+        brew doctor || true
+        for p in vim go@1.16 tcl-tk llvm lua luajit love neovim; do
+          brew install $p || brew outdated $p || brew upgrade $p
+        done
+        brew reinstall icu4c
+        brew link --overwrite python
+        brew link --overwrite vim
+        brew link --overwrite go@1.16
+        pip3 install --user neovim
+      name: 'Install vim and deps'
+
+    - run: go install github.com/go-delve/delve/cmd/dlv@latest
+      name: 'Install Delve for Go'
+
+    - uses: actions/cache@v2
+      with:
+        key: v1-gadgets-${{ runner.os }}-${{ hashFiles( 'python3/vimspector/gadgets.py' ) }}
+        path: gadgets/macos/download
+      name: Cache gadgets
+
+    - name: 'Install .NET Core SDK 3.1'
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: 3.1
+
+    - run: ${{ matrix.runtime }} --version
+      name: 'Print vim version information'
+
+    - run: |
+        ./run_tests --exe ${{ matrix.runtime }} --basedir $(pwd) --install --update --report messages --quiet
+      name: 'Run the tests'
+      id: run_tests
+      env:
+        VIMSPECTOR_MIMODE: lldb
+
+    - name: "Upload test logs"
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: 'test-logs-${{ runner.os }}-${{ matrix.runtime }}'
+        path: 'tests/logs/**/*'
+
+    - name: 'Package'
+      if: matrix.runtime == 'vim'
+      run: ./make_package macos ${{ github.run_id }}
+
+    # TODO: test the tarball
+
+    - name: "Upload package"
+      if: matrix.runtime == 'vim'
+      uses: actions/upload-artifact@v2
+      with:
+        name: 'package-macos'
+        path: 'package/macos-${{ github.run_id }}.tar.gz'
+
+    - name: Start SSH session if failed
+      uses: luchihoratiu/debug-via-ssh@main
+      if: failure() || cancelled()
+      with:
+        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+        SSH_PASS: ${{ secrets.SSH_PASS }}
+
+  PublishRelease:
+    runs-on: 'ubuntu-20.04'
+    needs:
+      - Linux
+      - MacOS
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - name: 'Download artifacts'
+      id: download_artifacts
+      uses: actions/download-artifact@v2
+
+    - name: 'Create Release'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_id }}
+        release_name: Build ${{ github.run_id }}
+        draft: false
+        prerelease: true
+
+    - name: 'Upload Linux Package'
+      id: upload-release-asset-linux
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.download_artifacts.outputs.download-path }}/package-linux/linux-${{ github.run_id }}.tar.gz
+        asset_name: vimspector-linux-${{ github.run_id }}.tar.gz
+        asset_content_type: application/gzip
+
+    - name: 'Upload MacOS Package'
+      id: upload-release-asset-macos
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.download_artifacts.outputs.download-path }}/package-macos/macos-${{ github.run_id }}.tar.gz
+        asset_name: vimspector-macos-${{ github.run_id }}.tar.gz
+        asset_content_type: application/gzip
