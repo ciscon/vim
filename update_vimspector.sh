@@ -6,10 +6,11 @@ curl -skL "$link"|tar -C ./pack/ -xzf -
 mv -f ./pack/vimspector* ./pack/vimspector
 
 if [ -d ./pack/vimspector/opt/vimspector ];then
-	vimspecbase=./pack/vimspector/opt/vimspector
+    vimspecbase=./pack/vimspector/opt/vimspector
 else
-	vimspecbase=./pack/vimspector
-	ln -sf ../../.. pack/vimspector/opt
+    vimspecbase=./pack/vimspector
+    rm -f pack/vimspector/opt
+    ln -sf .. pack/vimspector/opt                                                                                                      
 fi
 
 ./$vimspecbase/install_gadget.py --force-enable-php
