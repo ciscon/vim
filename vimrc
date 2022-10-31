@@ -161,6 +161,8 @@ set laststatus=2
 "slow inserts
 "set foldmethod=syntax
 "set foldlevel=999
+"
+set nofoldenable    " disable folding
 
 set guioptions+=a
 
@@ -280,5 +282,4 @@ let g:vimspector_ui_mode = 'horizontal'
 "hi default DbgCurrentLine term=reverse ctermfg=none ctermbg=Red guifg=#ffffff guibg=#ff0000
 "hi default DbgDisabledLine term=reverse ctermbg=none ctermfg=Cyan guibg=#b4ee9a guifg=#888888
 "hi default DbgBreakptSign term=reverse ctermfg=White ctermbg=DarkBlue guifg=#ffffff guibg=#0000ff
-
 
