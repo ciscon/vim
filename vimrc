@@ -80,8 +80,6 @@ set ruler
 
 
 
-"set shiftwidth=4
-"set softtabstop=4
 "highlight! link DiffText MatchParen
 
 "highlight DiffAdd cterm=none ctermfg=bg ctermbg=Green gui=none guifg=bg guibg=Green
@@ -176,8 +174,6 @@ set shiftwidth=2
 autocmd FileType php set makeprg=php\ -l\ %
 autocmd FileType c,cpp set makeprg=gcc\ -Wall\ -Wstrict-prototypes\ -Wmissing-prototypes\ -Wshadow\ -Wconversion\ %
 autocmd FileType c,sh setlocal noexpandtab softtabstop=0 shiftwidth=4
-set tabstop=4
-
 
 
 
