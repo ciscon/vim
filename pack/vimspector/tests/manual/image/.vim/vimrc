@@ -1,3 +1,0 @@
-runtime defaults.vim
-let g:vimspector_enable_mappings='HUMAN'
-source $HOME/vimspector/tests/vimrc

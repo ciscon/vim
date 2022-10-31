@@ -175,7 +175,7 @@ autocmd FileType php set makeprg=php\ -l\ %
 autocmd FileType c,cpp set makeprg=gcc\ -Wall\ -Wstrict-prototypes\ -Wmissing-prototypes\ -Wshadow\ -Wconversion\ %
 autocmd FileType c,sh setlocal noexpandtab softtabstop=0 shiftwidth=4
 
-
+packadd! vim-javascript
 
 "vimspector
 packadd! vimspector

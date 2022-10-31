@@ -1,3 +1,8 @@
 [submodule "pack/vim-javascript/start/vim-javascript"]
 	path = pack/vim-javascript/start/vim-javascript
 	url = https://github.com/pangloss/vim-javascript.git
+	branch = master
+[submodule "pack/vimspector"]
+	path = pack/vimspector
+	url = https://github.com/puremourning/vimspector.git
+	branch = master
