@@ -175,7 +175,7 @@ set shiftwidth=2
 
 autocmd FileType php set makeprg=php\ -l\ %
 autocmd FileType c,cpp set makeprg=gcc\ -Wall\ -Wstrict-prototypes\ -Wmissing-prototypes\ -Wshadow\ -Wconversion\ %
-autocmd FileType c,sh setlocal noexpandtab softtabstop=0 shiftwidth=4
+autocmd FileType c,cpp,sh,gitconfig setlocal noexpandtab softtabstop=0 shiftwidth=2
 
 packadd! vim-javascript
 
