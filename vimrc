@@ -1,5 +1,5 @@
 "source $VIMRUNTIME/defaults.vim
-set mouse=a
+set mouse=
 set ttymouse=xterm
 
 color xoria256
