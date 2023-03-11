@@ -283,3 +283,6 @@ let g:vimspector_ui_mode = 'horizontal'
 "hi default DbgDisabledLine term=reverse ctermbg=none ctermfg=Cyan guibg=#b4ee9a guifg=#888888
 "hi default DbgBreakptSign term=reverse ctermfg=White ctermbg=DarkBlue guifg=#ffffff guibg=#0000ff
 
+set wildmenu
+set wildmode=longest:full,full
+set wildoptions=pum,fuzzy
