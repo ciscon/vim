@@ -157,7 +157,6 @@ set laststatus=2
 "set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 
-
 "slow inserts
 "set foldmethod=syntax
 "set foldlevel=999
@@ -286,3 +285,6 @@ let g:vimspector_ui_mode = 'horizontal'
 set wildmenu
 set wildmode=longest:full,full
 set wildoptions=pum,fuzzy
+
+"line numbers
+nmap <silent> <c-l> :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
