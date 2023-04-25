@@ -2,8 +2,11 @@
 set mouse=
 set ttymouse=xterm
 
+set t_Co=256
 color xoria256
 set background=dark
+
+set termguicolors
 
 "add cursorline
 set cursorline
@@ -11,9 +14,10 @@ set cursorline
 "leave background alone if running in terminal
 if !has("gui_running")
   "no background?
-  "autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+  autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
   "do not change colors of fg on cursorline
   autocmd ColorScheme * highlight CursorLine ctermfg=NONE
+  autocmd ColorScheme * highlight EndOfBuffer ctermfg=NONE
 endif
 
 filetype plugin indent on
