@@ -288,7 +288,9 @@ let g:vimspector_ui_mode = 'horizontal'
 
 set wildmenu
 set wildmode=longest:full,full
-set wildoptions=pum,fuzzy
+if v:version > 900
+  set wildoptions=pum,fuzzy
+endif
 
 "line numbers
 nmap <silent> <c-l> :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
