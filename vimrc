@@ -6,8 +6,6 @@ set t_Co=256
 color xoria256
 set background=dark
 
-set termguicolors
-
 "add cursorline
 set cursorline
 
