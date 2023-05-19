@@ -1,6 +1,7 @@
 "source $VIMRUNTIME/defaults.vim
 set mouse=
 set ttymouse=xterm
+set scrolloff=50
 
 set t_Co=256
 color xoria256
