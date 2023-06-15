@@ -3,7 +3,7 @@ set mouse=
 set ttymouse=xterm
 set scrolloff=50
 
-set t_Co=256
+"set t_Co=256
 color xoria256
 set background=dark
 
