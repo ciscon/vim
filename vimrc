@@ -1,6 +1,11 @@
 "source $VIMRUNTIME/defaults.vim
 set mouse=
 set ttymouse=xterm
+
+"mouse support
+"set mouse=a
+"set ttymouse=sgr
+
 set scrolloff=50
 
 "set t_Co=256
