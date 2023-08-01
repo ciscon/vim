@@ -6,7 +6,8 @@ set ttymouse=xterm
 "set mouse=a
 "set ttymouse=sgr
 
-set scrolloff=50
+"keep cursor centered?
+"set scrolloff=50
 
 "set t_Co=256
 color xoria256
