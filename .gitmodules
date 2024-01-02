@@ -6,3 +6,6 @@
 	path = pack/vimspector
 	url = https://github.com/puremourning/vimspector.git
 	branch = master
+[submodule "pack/local/start/editorconfig-vim"]
+	path = pack/local/start/editorconfig-vim
+	url = https://github.com/editorconfig/editorconfig-vim.git
