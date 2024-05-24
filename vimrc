@@ -1,10 +1,4 @@
 "source $VIMRUNTIME/defaults.vim
-set mouse=
-set ttymouse=xterm
-
-"mouse support
-"set mouse=a
-"set ttymouse=sgr
 
 "keep cursor centered?
 "set scrolloff=50
@@ -397,3 +391,18 @@ if has("autocmd")
           \ endif
   augroup END
 endif
+
+" toggle mouse with control+space
+function! ToggleMouse()
+    " check if mouse is enabled
+    if &mouse == 'a'
+        " disable mouse
+        set mouse=
+    else
+        " enable mouse everywhere
+        set mouse=a
+    endif
+endfunc
+nnoremap <C-@> :call ToggleMouse()<CR>
+
+set mouse=
