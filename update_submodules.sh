@@ -1,5 +1,5 @@
 git submodule foreach --recursive git reset --hard
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 chmod u+wX ./pack -Rf
 ./pack/vimspector/install_gadget.py --force-enable-php
 rm -f ./pack/vimspector/configurations/linux/_all/vimspector.json 
