@@ -63,7 +63,7 @@ endfunction
 
 "don't wrap git commit messages
 autocmd Syntax gitcommit setlocal textwidth=0
-autocmd BufNewFile,BufRead *.html set syntax=php
+autocmd BufNewFile,BufRead *.html set syntax=php filetype=php
 
 "set paste
 
